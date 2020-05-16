@@ -35,7 +35,7 @@ void add_localsPy_to_globalsPy(const py::dict& locals_py) {
 
 int main(int argc, char *argv[])
 {
-	std::string dir_pythonHome = "C:/Users/alikyaw/Anaconda3/envs/pytorch_learn";
+	std::string dir_pythonHome = "C:/Users/alikyaw/Anaconda3/envs/pytorch";
 
 	// *********************** begin: python init *********************************** //
 	

@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
     model.eval()
     Tensor = torch.cuda.FloatTensor if cuda_is_available else torch.FloatTensor
 
-    def detect_heads(img_np):
+    def detect_objects(img_np):
         image_tensor = torch.from_numpy(img_np)
         image_tensor.unsqueeze_(0)
         image_tensor = image_tensor.permute(0, 3, 1, 2)
@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
 		typedef py::array_t<float, py::array::c_style | py::array::forcecast> NumpyArrayOutput;
 
 		NumpyArrayInput img_np({img.rows, img.cols, 3}, img.ptr<float>());
-		NumpyArrayOutput detections = locals_py["detect_heads"](img_np).cast<NumpyArrayOutput>();
+		NumpyArrayOutput detections = locals_py["detect_objects"](img_np).cast<NumpyArrayOutput>();
 		
 		int result_adder = locals_py["adder"](100, 50).cast<int>();
 		printf("result_adder = %d\n", result_adder);

@@ -72,20 +72,20 @@ void perform_nms(std::vector<cv::Rect>& dr_nms, std::vector<float>& ds_nms, cons
     }
 }
 
-class HeadDetectorTopDownCNNPytorch
+class ObjectDetectorCNNPytorch
 {
 public:
-    HeadDetectorTopDownCNNPytorch(double conf_thresh=0.5);
-    ~HeadDetectorTopDownCNNPytorch() override;
+    ObjectDetectorCNNPytorch(double conf_thresh=0.5);
+    ~ObjectDetectorCNNPytorch() override;
     std::vector<cv::Rect> detect(const cv::Mat& frame);
 private:
     struct m_p;
     m_p* m_pp;
 };
 
-struct HeadDetectorTopDownCNNPytorch::m_p {
-    const std::string dir_proj = "G:/Projects/PyTorch-YOLOv3-master/test_code_1";
-    const std::string fpath_vid = "F:/Datasets/Head/topDown/vids_640x360/NDC-101.mp4";
+struct ObjectDetectorCNNPytorch::m_p {
+    const std::string dir_proj = "G:/Projects/Proj14565";
+    const std::string fpath_vid = "F:/Datasets/someVid.mp4";
     const int imgSize_netInput = 416;
     double conf_thresh;
     const double nms_thresh = 0.5;
@@ -95,7 +95,7 @@ struct HeadDetectorTopDownCNNPytorch::m_p {
     py::dict locals_py;
 };
 
-HeadDetectorTopDownCNNPytorch::HeadDetectorTopDownCNNPytorch(double conf_thresh)
+ObjectDetectorCNNPytorch::ObjectDetectorCNNPytorch(double conf_thresh)
 {
     m_pp = new m_p();
     m_pp->conf_thresh = conf_thresh;
@@ -139,7 +139,7 @@ HeadDetectorTopDownCNNPytorch::HeadDetectorTopDownCNNPytorch(double conf_thresh)
     model.eval()
     Tensor = torch.cuda.FloatTensor if cuda_is_available else torch.FloatTensor
 
-    def detect_heads(img_np_rgb_resized_padded):
+    def detect_objects(img_np_rgb_resized_padded):
         image_tensor = torch.from_numpy(img_np_rgb_resized_padded)
         image_tensor.unsqueeze_(0)
         image_tensor = image_tensor.permute(0, 3, 1, 2)
@@ -157,12 +157,12 @@ HeadDetectorTopDownCNNPytorch::HeadDetectorTopDownCNNPytorch(double conf_thresh)
     add_localsPy_to_globalsPy(m_pp->locals_py);
 }
 
-HeadDetectorTopDownCNNPytorch::~HeadDetectorTopDownCNNPytorch()
+ObjectDetectorCNNPytorch::~ObjectDetectorCNNPytorch()
 {
     delete m_pp;
 }
 
-std::vector<cv::Rect> HeadDetectorTopDownCNNPytorch::detect(const cv::Mat& img_bgr)
+std::vector<cv::Rect> ObjectDetectorCNNPytorch::detect(const cv::Mat& img_bgr)
 {
     int height_img, width_img, imw, imh, pad_leftOrRight, pad_topOrBottom;
     double ratio, mult_factor;
@@ -205,7 +205,7 @@ std::vector<cv::Rect> HeadDetectorTopDownCNNPytorch::detect(const cv::Mat& img_b
     typedef py::array_t<float, py::array::c_style | py::array::forcecast> NumpyArrayOutput;
 
     NumpyArrayInput img_np_rgb_resized_padded({img_rgb_resized_padded.rows, img_rgb_resized_padded.cols, 3}, img_rgb_resized_padded.ptr<float>());
-    NumpyArrayOutput detections = m_pp->locals_py["detect_heads"](img_np_rgb_resized_padded).cast<NumpyArrayOutput>();
+    NumpyArrayOutput detections = m_pp->locals_py["detect_objects"](img_np_rgb_resized_padded).cast<NumpyArrayOutput>();
 
     int ndets = detections.shape(0);
 
@@ -263,8 +263,8 @@ std::vector<cv::Rect> HeadDetectorTopDownCNNPytorch::detect(const cv::Mat& img_b
 int main(int argc, char *argv[])
 {
 
-    PyGuard guard("C:/Users/alikyaw/Anaconda3/envs/pytorch_learn");
-	HeadDetectorTopDownCNNPytorch detector;
+    PyGuard guard("C:/Users/alikyaw/Anaconda3/envs/pytorch");
+	ObjectDetectorCNNPytorch detector;
 	cv::Mat img = cv::imread("some.jpg");
 	std::vector<cv::Rect> bboxes = detector.detect(img);
 		

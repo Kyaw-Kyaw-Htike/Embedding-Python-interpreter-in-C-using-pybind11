@@ -36,7 +36,7 @@ void add_localsPy_to_globalsPy(const py::dict& locals_py) {
 
 int main(int argc, char *argv[])
 {
-	std::string dir_pythonHome = "C:/Users/alikyaw/Anaconda3/envs/pytorch_learn";
+	std::string dir_pythonHome = "C:/Users/alikyaw/Anaconda3/envs/pytorch";
 	std::string fpath_vid = "path_to_video_file.mp4";
 
 	// *********************** begin: python init *********************************** //
